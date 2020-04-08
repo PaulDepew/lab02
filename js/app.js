@@ -27,7 +27,7 @@ function clickHandler(event){
 
 }
 
-$('select').on('click', clickHandler);
+$('select').on('change', clickHandler);
 
 
 const addValuesToPhotoTemplate = (item) => {
