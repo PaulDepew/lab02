@@ -1,0 +1,24 @@
+article.horns {
+    width: 400px;
+    display: inline-block;
+    background-color: cornflowerblue;
+    border-radius: 30%;
+    margin: 25px;
+}
+
+article.horns img {
+    width: 75%;
+    margin-left: 12%;
+    border-radius: 35%;
+}
+
+article.horns h2 {
+    text-align: center;
+}
+
+article.horns p {
+    text-align: center;
+    margin-top: -3px;
+    padding-top: 5px;
+}
+
