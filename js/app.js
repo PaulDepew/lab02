@@ -2,22 +2,16 @@
 
 let gallery = [];
 
-function Image(image_url, title, description, keyword, horns) {
-  this.image_url = image_url;
-  this.title = title;
-  this.description = description;
-  this.keyword = keyword;
-  this.horns = horns;
+
+function Image(data) {
+  this.image_url = data.image_url;
+  this.title = data.title;
+  this.description = data.description;
+  this.keyword = data.keyword;
+  this.horns = data.horns;
   gallery.push(this);
 }
 
-// Image.prototype.render = () => {
-//   $('#photo-template').append(`
-//     <h2>${this.title}</h2>
-//     <img src="${this.image_url}" alt="${this.keyword}"></img>
-//     <p>${this.description}</p>
-//     `);
-// };
 
 function clickHandler(event){
   event.preventDefault();
@@ -30,14 +24,18 @@ function clickHandler(event){
 $('select').on('change', clickHandler);
 
 
-const addValuesToPhotoTemplate = (item) => {
-  $('#photo-template').append(`
-    <article class="horns ${item.keyword}">
-    <h2>${item.title}</h2>
-    <img src="${item.image_url}" alt="${item.keyword}"></img>
-    <p>${item.description}</p>
-    </article>
-    `);
+Image.prototype.addValuesToPhotoTemplate = function(){
+  let template = $('#photo-template').html();
+  let $newSection = $('<article></article>');
+  $newSection.html(template);
+  $newSection.attr('class', 'horns');
+  $newSection.find('img').attr('src', this.image_url);
+  $newSection.find('h2').text(this.title);
+  $newSection.find('p').text(this.description);
+  $newSection.attr('keyword', this.keyword);
+  $newSection.attr('horns', this.horns);
+  $('main').append($newSection);
+
 };
 
 const addValuesToDropdown = () => {
@@ -50,20 +48,61 @@ const addValuesToDropdown = () => {
     let correctWords = `<option value="${displayedWords}">${displayedWords}</option>`;
 
     $('select').append(correctWords);
-
   });
 
 };
 
-// event handler => let number - on click change number to whatever number clicked (page-1 on default)
-// $.ajax(`data/${number}.json`).then( data => {
 
-$.ajax("data/page-1.json").then( data => {
-  data.forEach((value) => {
-    new Image(value.image_url, value.title, value.description, value.keyword, value.horns);
+let pageNumber = 'page-1';
+
+
+function pageChanger(event){
+  event.preventDefault();
+  pageNumber = event.target.value;
+  let oldMonster = $('article').not('#photo-template');
+  let oldKeyword = $('option');
+  $(oldMonster).remove();
+  $(oldKeyword).remove();
+  querypage();
+}
+
+$('.next').on('click', pageChanger);
+
+
+function querypage() {
+  $.ajax(`./data/${pageNumber}.json`, {method: 'GET', dataType: 'JSON'})
+    .then( (data) => {
+      data.forEach((value) => {
+        new Image(value).addValuesToPhotoTemplate();
+      });
+      // gallery.forEach( value => {
+      // });
+      addValuesToDropdown();
+    });
+};
+
+querypage();
+
+
+function sortNames(event){
+  event.preventDefault();
+  gallery.sort((a ,b) => {
+    if (b.title < a.title) {
+      return -1;
+    }
   });
-  gallery.forEach( value => {
-    addValuesToPhotoTemplate(value);
-  });
-  addValuesToDropdown();
-});
+}
+
+$('.sortNames').on('click', sortNames);
+
+// function sortHorns(event){
+//   event.preventDefault();
+//   pageNumber = event.target.value;
+//   let oldMonster = $('article').not('#photo-template');
+//   let oldKeyword = $('option');
+//   $(oldMonster).remove();
+//   $(oldKeyword).remove();
+//   querypage();
+// }
+
+// $('.sortHorns').on('click', sortHorns);
