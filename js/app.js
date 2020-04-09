@@ -6,7 +6,7 @@ function Image(image_url, title, description, keyword, horns) {
   this.image_url = image_url;
   this.title = title;
   this.description = description;
-  this. keyword = keyword;
+  this.keyword = keyword;
   this.horns = horns;
   gallery.push(this);
 }
@@ -20,7 +20,7 @@ function Image(image_url, title, description, keyword, horns) {
 // };
 
 function clickHandler(event){
- event.preventDefault();
+  event.preventDefault();
   $('.horns').hide();
   let rex = `.${event.target.value}`;
   $(rex).show();
@@ -40,12 +40,23 @@ const addValuesToPhotoTemplate = (item) => {
     `);
 };
 
-const addValuesToDropdown = (option) => {
+const addValuesToDropdown = () => {
+  let filteredArray = [];
+  gallery.forEach((words) => {
+    if (!filteredArray.includes(words.keyword))
+      filteredArray.push(words.keyword);
+  });
+  filteredArray.forEach((displayedWords) => {
+    let correctWords = `<option value="${displayedWords}">${displayedWords}</option>`;
 
-  $('select').append(
-    `<option value="${option.keyword}">${option.keyword}</option>`
-  );
+    $('select').append(correctWords);
+
+  });
+
 };
+
+// event handler => let number - on click change number to whatever number clicked (page-1 on default)
+// $.ajax(`data/${number}.json`).then( data => {
 
 $.ajax("data/page-1.json").then( data => {
   data.forEach((value) => {
@@ -53,6 +64,6 @@ $.ajax("data/page-1.json").then( data => {
   });
   gallery.forEach( value => {
     addValuesToPhotoTemplate(value);
-    addValuesToDropdown(value);
   });
+  addValuesToDropdown();
 });
