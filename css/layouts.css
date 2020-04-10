@@ -22,3 +22,7 @@ article.horns p {
     padding-top: 5px;
 }
 
+.root {
+    display: flex;
+    
+}

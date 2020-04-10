@@ -26,16 +26,17 @@ $('select').on('change', clickHandler);
 
 Image.prototype.addValuesToPhotoTemplate = function(){
   let template = $('#photo-template').html();
-  let $newSection = $('<article></article>');
-  $newSection.html(template);
-  $newSection.attr('class', 'horns');
-  $newSection.find('img').attr('src', this.image_url);
-  $newSection.find('h2').text(this.title);
-  $newSection.find('p').text(this.description);
-  $newSection.attr('keyword', this.keyword);
-  $newSection.attr('horns', this.horns);
-  $('main').append($newSection);
-
+  let rendertemplate = Mustache.render(template, this);
+  // let $newSection = $('<article></article>');
+  // $newSection.html(template);
+  // $newSection.attr('class', 'horns');
+  // $newSection.find('img').attr('src', this.image_url);
+  // $newSection.find('h2').text(this.title);
+  // $newSection.find('p').text(this.description);
+  // $newSection.attr('keyword', this.keyword);
+  // $newSection.attr('horns', this.horns);
+  // $('main').append($newSection);
+  $('#root').append(rendertemplate);
 };
 
 const addValuesToDropdown = () => {
@@ -88,6 +89,8 @@ function sortNames(event){
   event.preventDefault();
   gallery.sort((a ,b) => {
     if (b.title < a.title) {
+      return 1;
+    } else if (b.title > a.title) {
       return -1;
     }
   });
